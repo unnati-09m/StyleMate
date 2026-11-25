@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "StyleMate",
+    "slug": "stylemate",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "stylemate",
+    "plugins": ["expo-router"],
+    "experiments": {
+      "typedRoutes": false
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#F8F2EC"
+      }
+    }
+  }
+}
