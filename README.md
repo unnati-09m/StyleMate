@@ -9,8 +9,8 @@ A personal smart wardrobe assistant for iOS and Android, built with JavaScript, 
 - [x] Initial screen layouts and empty states
 - [x] Welcome screen
 - [x] Local profile creation and email-based profile access
-- [ ] Clothing photo picker and manual attributes
-- [ ] Local wardrobe database
+- [x] Manual clothing attributes and wardrobe item management\n- [ ] Clothing photo picker
+- [x] Local wardrobe persistence with AsyncStorage
 - [ ] Rule-based outfit suggestions
 - [ ] Favourite outfit persistence
 - [ ] Wear history persistence
