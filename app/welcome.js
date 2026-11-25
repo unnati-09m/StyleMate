@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   },
   artCard: {
     height: 255,
-    backgroundColor: "#F0E5DC",
+    backgroundColor: "#F2F2F2",
     borderRadius: 28,
     alignItems: "center",
     justifyContent: "center",
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 75,
-    backgroundColor: "#E3CFC1",
+    backgroundColor: "#E5E5E5",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   floatingLabel: {
     position: "absolute",
     bottom: 24,
-    backgroundColor: "#FBF8F4",
+    backgroundColor: "#FFFFFF",
     paddingHorizontal: 14,
     paddingVertical: 9,
     borderRadius: RADIUS.pill,
