@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import {
   Alert,
   FlatList,
+  Image,
   Modal,
   Pressable,
   ScrollView,
@@ -11,6 +12,7 @@ import {
   View,
 } from "react-native";
 import { useFocusEffect } from "expo-router";
+import * as ImagePicker from "expo-image-picker";
 import { COLORS, RADIUS, SPACING } from "../../constants/theme";
 import { getWardrobeItems, saveWardrobeItems } from "../../utils/wardrobeStorage";
 
@@ -24,6 +26,7 @@ const EMPTY_FORM = {
   color: "",
   occasion: "Casual",
   season: "All season",
+  imageUri: null,
 };
 
 function ChoiceRow({ options, selected, onSelect }) {
@@ -65,6 +68,30 @@ export default function WardrobeScreen() {
     setForm((current) => ({ ...current, [field]: value }));
   }
 
+  async function choosePhoto() {
+    try {
+      const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (!permission.granted) {
+        Alert.alert("Permission needed", "Please allow photo access to add a clothing picture.");
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ["images"],
+        allowsEditing: true,
+        aspect: [4, 5],
+        quality: 0.8,
+      });
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        updateForm("imageUri", result.assets[0].uri);
+      }
+    } catch {
+      Alert.alert("Couldn't open photos", "Please try again.");
+    }
+  }
+
   async function addItem() {
     if (!form.name.trim() || !form.color.trim()) {
       Alert.alert("Missing details", "Please enter an item name and colour.");
@@ -78,7 +105,7 @@ export default function WardrobeScreen() {
       color: form.color.trim(),
       occasion: form.occasion,
       season: form.season,
-      imageUri: null,
+      imageUri: form.imageUri,
       createdAt: new Date().toISOString(),
     };
 
@@ -119,7 +146,11 @@ export default function WardrobeScreen() {
     return (
       <View style={styles.itemCard}>
         <View style={styles.itemVisual}>
-          <Text style={styles.itemVisualText}>{item.category === "Shoes" ? "◒" : "♧"}</Text>
+          {item.imageUri ? (
+            <Image source={{ uri: item.imageUri }} style={styles.itemPhoto} />
+          ) : (
+            <Text style={styles.itemVisualText}>{item.category === "Shoes" ? "◒" : "♧"}</Text>
+          )}
         </View>
         <View style={styles.itemInfo}>
           <Text style={styles.itemName}>{item.name}</Text>
@@ -197,6 +228,23 @@ export default function WardrobeScreen() {
             </Pressable>
           </View>
 
+          <Text style={styles.fieldLabel}>CLOTHING PHOTO</Text>
+          <Pressable style={styles.photoPicker} onPress={choosePhoto}>
+            {form.imageUri ? (
+              <Image source={{ uri: form.imageUri }} style={styles.photoPreview} />
+            ) : (
+              <View style={styles.photoPlaceholder}>
+                <Text style={styles.photoPlus}>＋</Text>
+                <Text style={styles.photoPickerText}>Choose a photo from your gallery</Text>
+              </View>
+            )}
+          </Pressable>
+          {form.imageUri ? (
+            <Pressable onPress={() => updateForm("imageUri", null)} style={styles.removePhotoButton}>
+              <Text style={styles.removePhotoText}>Remove photo</Text>
+            </Pressable>
+          ) : null}
+
           <Text style={styles.fieldLabel}>ITEM NAME</Text>
           <TextInput
             value={form.name}
@@ -259,6 +307,14 @@ const styles = StyleSheet.create({
   itemCard: { flexDirection: "row", alignItems: "center", backgroundColor: COLORS.surface, borderRadius: RADIUS.md, borderWidth: 1, borderColor: COLORS.border, padding: 11 },
   itemVisual: { width: 66, height: 76, borderRadius: 13, backgroundColor: COLORS.surfaceMuted, alignItems: "center", justifyContent: "center" },
   itemVisualText: { color: COLORS.accent, fontSize: 34 },
+  itemPhoto: { width: "100%", height: "100%", borderRadius: 13 },
+  photoPicker: { minHeight: 150, borderWidth: 1, borderColor: COLORS.border, borderRadius: 14, overflow: "hidden", backgroundColor: COLORS.surfaceMuted },
+  photoPlaceholder: { flex: 1, minHeight: 150, alignItems: "center", justifyContent: "center" },
+  photoPlus: { color: COLORS.text, fontSize: 30, marginBottom: 5 },
+  photoPickerText: { color: COLORS.textMuted, fontSize: 11 },
+  photoPreview: { width: "100%", height: 220, resizeMode: "cover" },
+  removePhotoButton: { alignSelf: "flex-end", marginTop: 8 },
+  removePhotoText: { color: COLORS.textMuted, fontSize: 11, textDecorationLine: "underline" },
   itemInfo: { flex: 1, marginLeft: 13 },
   itemName: { color: COLORS.text, fontSize: 14, fontWeight: "800" },
   itemMeta: { color: COLORS.textMuted, fontSize: 11, marginTop: 4 },
