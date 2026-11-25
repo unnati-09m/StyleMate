@@ -2,21 +2,22 @@
 
 A personal smart wardrobe assistant for iOS and Android, built with JavaScript, React Native, and Expo Router.
 
-## What StyleMate will do
-
-StyleMate helps people make better use of the clothes they already own. It will keep a photo wardrobe, use manually entered clothing attributes, create explainable rule-based outfit suggestions, and track favourite outfits and wear history.
-
 ## Current progress
 
-- [x] Expo project configuration
-- [x] Expo Router setup
-- [x] Home, Wardrobe, Favourites, and History navigation
+- [x] Expo project configuration and Expo Router
+- [x] Four-tab navigation: Home, Wardrobe, Favourites, History
 - [x] Initial screen layouts and empty states
-- [ ] Add clothing photos and manual attributes
-- [ ] Save wardrobe items locally
-- [ ] Generate rule-based outfit suggestions
-- [ ] Save favourite outfit combinations
-- [ ] Record wear history
+- [x] Welcome screen
+- [x] Local profile creation and email-based profile access
+- [ ] Clothing photo picker and manual attributes
+- [ ] Local wardrobe database
+- [ ] Rule-based outfit suggestions
+- [ ] Favourite outfit persistence
+- [ ] Wear history persistence
+
+## Important note about profiles
+
+The current create-profile flow stores a name and email locally on the device using AsyncStorage. It is a lightweight local profile for this offline-first student project, not a secure online account or server-backed authentication system.
 
 ## Tech stack
 
@@ -24,24 +25,18 @@ StyleMate helps people make better use of the clothes they already own. It will 
 - React Native
 - Expo SDK 58
 - Expo Router
-- Expo SQLite (for local persistence)
-- Expo Image Picker (for clothing photos)
+- AsyncStorage for the initial local profile
+- Expo SQLite planned for wardrobe, favourites, and wear history
+- Expo Image Picker planned for clothing photos
 
 ## Getting started
 
-You need Node.js 22.13 or newer for Expo SDK 58.
-
-Clone the repository and install dependencies:
+Requires Node.js 22.13 or newer.
 
 ```bash
 git clone https://github.com/unnati-09m/StyleMate.git
 cd StyleMate
 npm install
-```
-
-Start the development server:
-
-```bash
 npx expo start
 ```
 
@@ -52,6 +47,12 @@ Press `i` to open the iOS simulator, or scan the QR code using Expo Go on a comp
 ```text
 app/
   _layout.js
+  index.js
+  welcome.js
+  signup.js
+  login.js
+  (auth)/
+    _layout.js
   (tabs)/
     _layout.js
     index.js
@@ -64,4 +65,4 @@ constants/
 
 ## Development approach
 
-The project is being built in small, understandable steps. Each feature should remain easy to explain and test. Outfit recommendations use deterministic JavaScript rules; no cloud backend or AI model is required.
+The app is built in small, understandable steps. Outfit recommendations will use deterministic JavaScript rules based only on clothes the user has added. No cloud backend or AI model is required.
