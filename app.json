@@ -7,7 +7,14 @@
     "userInterfaceStyle": "light",
     "scheme": "stylemate",
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "StyleMate needs access to your photos so you can add pictures of your clothes.",
+          "microphonePermission": false
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": false
