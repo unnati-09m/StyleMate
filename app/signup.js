@@ -39,8 +39,12 @@ export default function SignupScreen() {
         JSON.stringify({ name: cleanName, email: cleanEmail })
       );
       router.replace("/(tabs)");
-    } catch {
-      Alert.alert("Couldn't save your profile", "Please try again.");
+    } catch (error) {
+      console.error("Profile save failed:", error);
+      Alert.alert(
+        "Couldn't save your profile",
+        error?.message || String(error) || "An unknown storage error occurred."
+      );
     }
   }
 
