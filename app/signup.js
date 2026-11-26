@@ -15,7 +15,7 @@ import { Link, useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { COLORS, RADIUS, SPACING } from "../constants/theme";
 
-const SIGNUP_IMAGE = "https://images.pexels.com/photos/37704838/pexels-photo-37704838.jpeg?auto=compress&cs=tinysrgb&w=900";
+const SIGNUP_IMAGE = require("../assets/fashion-login.jpg");
 
 export default function SignupScreen() {
   const router = useRouter();
@@ -49,7 +49,7 @@ export default function SignupScreen() {
     <KeyboardAvoidingView style={styles.keyboard} behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <ScrollView contentContainerStyle={styles.screen} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
         <Link href="/welcome" style={styles.back}>‹  BACK</Link>
-        <ImageBackground source={{ uri: SIGNUP_IMAGE }} style={styles.banner} imageStyle={styles.bannerImage}>
+        <ImageBackground source={SIGNUP_IMAGE} style={styles.banner} imageStyle={styles.bannerImage}>
           <View style={styles.bannerShade} />
           <View style={styles.bannerCopy}>
             <Text style={styles.bannerEyebrow}>STYLEMATE / YOUR STYLE SPACE</Text>
