@@ -3,6 +3,7 @@ import {
   Alert,
   FlatList,
   Image,
+  ImageBackground,
   Modal,
   Pressable,
   ScrollView,
@@ -208,9 +209,10 @@ export default function WardrobeScreen() {
 
       {items.length === 0 ? (
         <View style={styles.emptyCard}>
-          <View style={styles.emptyIcon}>
-            <Text style={styles.emptyIconText}>♧</Text>
-          </View>
+          <ImageBackground source={require("../../assets/wardrobe-rack.jpg")} style={styles.emptyPhoto} imageStyle={styles.emptyPhotoImage}>
+            <View style={styles.emptyPhotoShade} />
+            <Text style={styles.emptyPhotoLabel}>YOUR PERSONAL COLLECTION</Text>
+          </ImageBackground>
           <Text style={styles.emptyTitle}>A wardrobe full of possibilities</Text>
           <Text style={styles.emptyText}>
             Start by adding a clothing piece. Add its name, category, colour and when you like to wear it.
@@ -348,8 +350,10 @@ const styles = StyleSheet.create({
   addButton: { backgroundColor: COLORS.text, borderRadius: RADIUS.pill, paddingHorizontal: 15, paddingVertical: 10 },
   addButtonText: { color: "#FFFFFF", fontSize: 11, fontWeight: "700" },
   emptyCard: { backgroundColor: COLORS.surface, borderWidth: 1, borderColor: COLORS.border, borderRadius: RADIUS.lg, padding: 23, alignItems: "center", marginTop: 12 },
-  emptyIcon: { width: 82, height: 82, borderRadius: 41, backgroundColor: COLORS.surfaceMuted, alignItems: "center", justifyContent: "center" },
-  emptyIconText: { color: COLORS.accent, fontSize: 44, transform: [{ rotate: "90deg" }] },
+  emptyPhoto: { width: "100%", height: 190, justifyContent: "flex-end", padding: 15, overflow: "hidden", marginBottom: 4 },
+  emptyPhotoImage: { borderRadius: 16 },
+  emptyPhotoShade: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.12)" },
+  emptyPhotoLabel: { color: "#FFFFFF", fontSize: 9, fontWeight: "900", letterSpacing: 1.4 },
   emptyTitle: { color: COLORS.text, fontSize: 17, fontWeight: "800", textAlign: "center", marginTop: 18 },
   emptyText: { color: COLORS.textMuted, fontSize: 12, lineHeight: 19, textAlign: "center", marginTop: 8 },
   emptyButton: { backgroundColor: COLORS.text, borderRadius: RADIUS.pill, paddingHorizontal: 20, paddingVertical: 13, marginTop: 19 },
