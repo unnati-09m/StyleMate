@@ -31,7 +31,7 @@ export default function SignupScreen() {
       return;
     }
 
-    if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(cleanEmail)) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
       Alert.alert("Check your email", "Please enter a valid email address.");
       return;
     }
