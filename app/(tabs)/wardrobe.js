@@ -53,6 +53,7 @@ export default function WardrobeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [form, setForm] = useState(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   const loadItems = useCallback(async () => {
     const savedItems = await getWardrobeItems();
@@ -154,6 +155,10 @@ export default function WardrobeScreen() {
     ]);
   }
 
+  const visibleItems = selectedCategory === "All"
+    ? items
+    : items.filter((item) => item.category === selectedCategory);
+
   function renderItem({ item }) {
     return (
       <View style={styles.itemCard}>
@@ -161,20 +166,21 @@ export default function WardrobeScreen() {
           {item.imageUri ? (
             <Image source={{ uri: item.imageUri }} style={styles.itemPhoto} />
           ) : (
-            <Text style={styles.itemVisualText}>{item.category === "Shoes" ? "◒" : "♧"}</Text>
+            <View style={styles.photoFallback}>
+              <Text style={styles.itemVisualText}>{item.category === "Shoes" ? "◒" : "♧"}</Text>
+            </View>
           )}
+          <View style={styles.categoryBadge}>
+            <Text style={styles.categoryBadgeText}>{item.category.toUpperCase()}</Text>
+          </View>
+          <Pressable style={styles.removeButton} onPress={() => removeItem(item)} hitSlop={10} accessibilityLabel={`Remove ${item.name}`}>
+            <Text style={styles.removeButtonText}>×</Text>
+          </Pressable>
         </View>
         <View style={styles.itemInfo}>
-          <Text style={styles.itemName}>{item.name}</Text>
-          <Text style={styles.itemMeta}>{item.color} · {item.category}</Text>
-          <View style={styles.itemTags}>
-            <Text style={styles.itemTag}>{item.occasion}</Text>
-            <Text style={styles.itemTag}>{item.season}</Text>
-          </View>
+          <Text style={styles.itemName} numberOfLines={1}>{item.name}</Text>
+          <Text style={styles.itemMeta}>{item.color} · {item.occasion}</Text>
         </View>
-        <Pressable onPress={() => removeItem(item)} hitSlop={10} accessibilityLabel={`Remove ${item.name}`}>
-          <Text style={styles.removeButton}>×</Text>
-        </Pressable>
       </View>
     );
   }
@@ -214,13 +220,29 @@ export default function WardrobeScreen() {
           </Pressable>
         </View>
       ) : (
-        <FlatList
-          data={items}
-          keyExtractor={(item) => item.id}
-          renderItem={renderItem}
-          contentContainerStyle={styles.listContent}
-          showsVerticalScrollIndicator={false}
-        />
+        <>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
+            {["All", ...CATEGORIES].map((category) => (
+              <Pressable
+                key={category}
+                onPress={() => setSelectedCategory(category)}
+                style={[styles.filterChip, selectedCategory === category && styles.filterChipSelected]}
+              >
+                <Text style={[styles.filterText, selectedCategory === category && styles.filterTextSelected]}>{category}</Text>
+              </Pressable>
+            ))}
+          </ScrollView>
+          <FlatList
+            data={visibleItems}
+            keyExtractor={(item) => item.id}
+            renderItem={renderItem}
+            numColumns={2}
+            columnWrapperStyle={styles.gridRow}
+            contentContainerStyle={styles.listContent}
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={<Text style={styles.noItems}>No pieces in this category yet.</Text>}
+          />
+        </>
       )}
 
       <Modal
@@ -317,6 +339,11 @@ const styles = StyleSheet.create({
   countNumber: { color: COLORS.text, fontSize: 21, fontWeight: "800" },
   countLabel: { color: COLORS.textMuted, fontSize: 7, fontWeight: "800", letterSpacing: 1 },
   toolbar: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 28, marginBottom: 14 },
+  filterRow: { gap: 8, paddingBottom: 15 },
+  filterChip: { paddingHorizontal: 15, paddingVertical: 9, borderRadius: RADIUS.pill, borderWidth: 1, borderColor: COLORS.border, backgroundColor: COLORS.surface },
+  filterChipSelected: { backgroundColor: COLORS.text, borderColor: COLORS.text },
+  filterText: { color: COLORS.textMuted, fontSize: 10, fontWeight: "700" },
+  filterTextSelected: { color: "#FFFFFF" },
   sectionTitle: { color: COLORS.text, fontSize: 16, fontWeight: "800" },
   addButton: { backgroundColor: COLORS.text, borderRadius: RADIUS.pill, paddingHorizontal: 15, paddingVertical: 10 },
   addButtonText: { color: "#FFFFFF", fontSize: 11, fontWeight: "700" },
@@ -327,11 +354,18 @@ const styles = StyleSheet.create({
   emptyText: { color: COLORS.textMuted, fontSize: 12, lineHeight: 19, textAlign: "center", marginTop: 8 },
   emptyButton: { backgroundColor: COLORS.text, borderRadius: RADIUS.pill, paddingHorizontal: 20, paddingVertical: 13, marginTop: 19 },
   emptyButtonText: { color: "#FFFFFF", fontSize: 12, fontWeight: "700" },
-  listContent: { paddingBottom: 24, gap: 11 },
-  itemCard: { flexDirection: "row", alignItems: "center", backgroundColor: COLORS.surface, borderRadius: RADIUS.md, borderWidth: 1, borderColor: COLORS.border, padding: 11 },
-  itemVisual: { width: 66, height: 76, borderRadius: 13, backgroundColor: COLORS.surfaceMuted, alignItems: "center", justifyContent: "center" },
-  itemVisualText: { color: COLORS.accent, fontSize: 34 },
-  itemPhoto: { width: "100%", height: "100%", borderRadius: 13 },
+  listContent: { paddingBottom: 28 },
+  gridRow: { justifyContent: "space-between", marginBottom: 13 },
+  itemCard: { width: "48.5%", backgroundColor: COLORS.surface, borderRadius: 17, borderWidth: 1, borderColor: COLORS.border, overflow: "hidden" },
+  itemVisual: { height: 190, backgroundColor: "#F1ECE7", position: "relative" },
+  itemVisualText: { color: COLORS.accent, fontSize: 42 },
+  photoFallback: { flex: 1, alignItems: "center", justifyContent: "center" },
+  itemPhoto: { width: "100%", height: "100%", resizeMode: "cover" },
+  categoryBadge: { position: "absolute", left: 9, bottom: 9, backgroundColor: "rgba(255,255,255,0.94)", borderRadius: 20, paddingHorizontal: 8, paddingVertical: 5 },
+  categoryBadgeText: { color: COLORS.text, fontSize: 7, fontWeight: "900", letterSpacing: 0.8 },
+  removeButton: { position: "absolute", right: 8, top: 8, width: 27, height: 27, borderRadius: 14, backgroundColor: "rgba(255,255,255,0.94)", alignItems: "center", justifyContent: "center" },
+  removeButtonText: { color: COLORS.text, fontSize: 19, lineHeight: 21 },
+  noItems: { color: COLORS.textMuted, textAlign: "center", padding: 24, fontSize: 12 },
   sampleList: { gap: 10, paddingBottom: 4 },
   sampleCard: { width: 112, padding: 7, borderWidth: 1, borderColor: COLORS.border, borderRadius: 13, backgroundColor: COLORS.surface },
   samplePhoto: { width: "100%", height: 105, borderRadius: 9, backgroundColor: COLORS.surfaceMuted },
@@ -345,12 +379,9 @@ const styles = StyleSheet.create({
   photoPreview: { width: "100%", height: 220, resizeMode: "cover" },
   removePhotoButton: { alignSelf: "flex-end", marginTop: 8 },
   removePhotoText: { color: COLORS.textMuted, fontSize: 11, textDecorationLine: "underline" },
-  itemInfo: { flex: 1, marginLeft: 13 },
-  itemName: { color: COLORS.text, fontSize: 14, fontWeight: "800" },
-  itemMeta: { color: COLORS.textMuted, fontSize: 11, marginTop: 4 },
-  itemTags: { flexDirection: "row", gap: 6, marginTop: 8 },
-  itemTag: { color: COLORS.accent, backgroundColor: "#F5EEE8", fontSize: 9, paddingHorizontal: 8, paddingVertical: 4, borderRadius: RADIUS.pill, overflow: "hidden" },
-  removeButton: { color: COLORS.textMuted, fontSize: 24, paddingHorizontal: 5 },
+  itemInfo: { paddingHorizontal: 11, paddingVertical: 12 },
+  itemName: { color: COLORS.text, fontSize: 12, fontWeight: "800" },
+  itemMeta: { color: COLORS.textMuted, fontSize: 10, marginTop: 5 },
   modalScreen: { flex: 1, backgroundColor: COLORS.background },
   modalContent: { padding: SPACING.lg, paddingTop: 26, paddingBottom: 40 },
   modalHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 28 },
