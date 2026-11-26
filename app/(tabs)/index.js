@@ -2,7 +2,7 @@ import { ImageBackground, Pressable, ScrollView, StyleSheet, Text, View } from "
 import { useRouter } from "expo-router";
 import { COLORS, RADIUS, SPACING } from "../../constants/theme";
 
-const HERO_IMAGE = "https://images.pexels.com/photos/7383102/pexels-photo-7383102.jpeg?auto=compress&cs=tinysrgb&w=1000";
+const HERO_IMAGE = require("../../assets/fashion-home.jpg");
 
 function SectionHeading({ title, action }) {
   return (
@@ -37,7 +37,7 @@ export default function HomeScreen() {
           <Text style={styles.heroEyebrow}>TODAY'S INSPIRATION</Text>
           <View style={styles.newTag}><Text style={styles.newTagText}>STYLE NOTE 01</Text></View>
         </View>
-        <ImageBackground source={{ uri: HERO_IMAGE }} style={styles.heroImage} imageStyle={styles.heroImageStyle}>
+        <ImageBackground source={HERO_IMAGE} style={styles.heroImage} imageStyle={styles.heroImageStyle}>
           <View style={styles.imageShade} />
           <View style={styles.imageCaption}>
             <Text style={styles.imageCaptionSmall}>THE EVERYDAY EDIT</Text>
