@@ -15,7 +15,7 @@ export const SAMPLE_CLOTHING = [
     color: "Blue",
     occasion: "Casual",
     season: "All season",
-    imageUri: "https://www.vintagerareusa.com/cdn/shop/files/DSC_2715-1-861712.jpg?v=1730929665",
+    imageUri: "https://images.pexels.com/photos/4546763/pexels-photo-4546763.jpeg?auto=compress&cs=tinysrgb&w=600",
   },
   {
     id: "sample-black-dress",
@@ -24,6 +24,6 @@ export const SAMPLE_CLOTHING = [
     color: "Black",
     occasion: "Party",
     season: "All season",
-    imageUri: "https://laifbrand.pl/cdn/shop/articles/result_chatgpt-image-30-wrz-2025-13_03_54.png?v=1759238597&width=900",
+    imageUri: "https://images.pexels.com/photos/7383102/pexels-photo-7383102.jpeg?auto=compress&cs=tinysrgb&w=600",
   },
 ];
