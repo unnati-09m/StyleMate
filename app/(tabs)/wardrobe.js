@@ -14,6 +14,7 @@ import {
 import { useFocusEffect } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import { COLORS, RADIUS, SPACING } from "../../constants/theme";
+import { SAMPLE_CLOTHING } from "../../constants/sampleClothing";
 import { getWardrobeItems, saveWardrobeItems } from "../../utils/wardrobeStorage";
 
 const CATEGORIES = ["Top", "Bottom", "Dress", "Shoes", "Accessory"];
@@ -66,6 +67,17 @@ export default function WardrobeScreen() {
 
   function updateForm(field, value) {
     setForm((current) => ({ ...current, [field]: value }));
+  }
+
+  function useSample(sample) {
+    setForm({
+      name: sample.name,
+      category: sample.category,
+      color: sample.color,
+      occasion: sample.occasion,
+      season: sample.season,
+      imageUri: sample.imageUri,
+    });
   }
 
   async function choosePhoto() {
@@ -228,6 +240,18 @@ export default function WardrobeScreen() {
             </Pressable>
           </View>
 
+          <Text style={styles.fieldLabel}>QUICK START WITH A SAMPLE</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.sampleList}>
+            {SAMPLE_CLOTHING.map((sample) => (
+              <Pressable key={sample.id} style={styles.sampleCard} onPress={() => useSample(sample)}>
+                <Image source={{ uri: sample.imageUri }} style={styles.samplePhoto} />
+                <Text style={styles.sampleName} numberOfLines={1}>{sample.name}</Text>
+                <Text style={styles.sampleCategory}>{sample.category}</Text>
+              </Pressable>
+            ))}
+          </ScrollView>
+          <Text style={styles.sampleNote}>Choose a sample or add a photo from your own gallery below.</Text>
+
           <Text style={styles.fieldLabel}>CLOTHING PHOTO</Text>
           <Pressable style={styles.photoPicker} onPress={choosePhoto}>
             {form.imageUri ? (
@@ -308,6 +332,12 @@ const styles = StyleSheet.create({
   itemVisual: { width: 66, height: 76, borderRadius: 13, backgroundColor: COLORS.surfaceMuted, alignItems: "center", justifyContent: "center" },
   itemVisualText: { color: COLORS.accent, fontSize: 34 },
   itemPhoto: { width: "100%", height: "100%", borderRadius: 13 },
+  sampleList: { gap: 10, paddingBottom: 4 },
+  sampleCard: { width: 112, padding: 7, borderWidth: 1, borderColor: COLORS.border, borderRadius: 13, backgroundColor: COLORS.surface },
+  samplePhoto: { width: "100%", height: 105, borderRadius: 9, backgroundColor: COLORS.surfaceMuted },
+  sampleName: { color: COLORS.text, fontSize: 10, fontWeight: "700", marginTop: 7 },
+  sampleCategory: { color: COLORS.textMuted, fontSize: 9, marginTop: 2 },
+  sampleNote: { color: COLORS.textMuted, fontSize: 10, marginTop: 7 },
   photoPicker: { minHeight: 150, borderWidth: 1, borderColor: COLORS.border, borderRadius: 14, overflow: "hidden", backgroundColor: COLORS.surfaceMuted },
   photoPlaceholder: { flex: 1, minHeight: 150, alignItems: "center", justifyContent: "center" },
   photoPlus: { color: COLORS.text, fontSize: 30, marginBottom: 5 },
