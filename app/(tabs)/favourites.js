@@ -1,7 +1,7 @@
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import { COLORS, RADIUS, SPACING } from "../../constants/theme";
 
-const FAVOURITE_IMAGE = "https://images.pexels.com/photos/7383102/pexels-photo-7383102.jpeg?auto=compress&cs=tinysrgb&w=900";
+const FAVOURITE_IMAGE = require("../../assets/wardrobe-rack.jpg");
 
 export default function FavouritesScreen() {
   return (
@@ -10,7 +10,7 @@ export default function FavouritesScreen() {
       <Text style={styles.title}>Your saved edit.</Text>
       <Text style={styles.description}>Keep the combinations you love, all in one place.</Text>
 
-      <ImageBackground source={{ uri: FAVOURITE_IMAGE }} style={styles.imageCard} imageStyle={styles.image}>
+      <ImageBackground source={FAVOURITE_IMAGE} style={styles.imageCard} imageStyle={styles.image}>
         <View style={styles.shade} />
         <Text style={styles.imageKicker}>YOUR PERSONAL COLLECTION</Text>
         <Text style={styles.imageTitle}>Good outfits{"\n"}are worth keeping.</Text>
