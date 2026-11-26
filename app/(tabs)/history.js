@@ -1,7 +1,7 @@
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import { COLORS, RADIUS, SPACING } from "../../constants/theme";
 
-const HISTORY_IMAGE = "https://images.pexels.com/photos/37704838/pexels-photo-37704838.jpeg?auto=compress&cs=tinysrgb&w=900";
+const HISTORY_IMAGE = require("../../assets/wardrobe-rack.jpg");
 
 export default function HistoryScreen() {
   return (
@@ -10,7 +10,7 @@ export default function HistoryScreen() {
       <Text style={styles.title}>The days you wore it.</Text>
       <Text style={styles.description}>A little timeline of the outfits that made it out into the world.</Text>
 
-      <ImageBackground source={{ uri: HISTORY_IMAGE }} style={styles.imageCard} imageStyle={styles.image}>
+      <ImageBackground source={HISTORY_IMAGE} style={styles.imageCard} imageStyle={styles.image}>
         <View style={styles.shade} />
         <Text style={styles.imageKicker}>STYLE, DAY BY DAY</Text>
         <Text style={styles.imageTitle}>Every day is{"\n"}another outfit story.</Text>
