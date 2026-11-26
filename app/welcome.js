@@ -2,14 +2,14 @@ import { ImageBackground, Pressable, StyleSheet, Text, View } from "react-native
 import { Link } from "expo-router";
 import { COLORS, RADIUS, SPACING } from "../constants/theme";
 
-const WELCOME_IMAGE = "https://images.pexels.com/photos/7383102/pexels-photo-7383102.jpeg?auto=compress&cs=tinysrgb&w=1000";
+const WELCOME_IMAGE = require("../assets/fashion-home.jpg");
 
 export default function WelcomeScreen() {
   return (
     <View style={styles.screen}>
       <Text style={styles.topNote}>A LITTLE MORE YOU, EVERY DAY</Text>
 
-      <ImageBackground source={{ uri: WELCOME_IMAGE }} style={styles.artCard} imageStyle={styles.artImage}>
+      <ImageBackground source={WELCOME_IMAGE} style={styles.artCard} imageStyle={styles.artImage}>
         <View style={styles.imageShade} />
         <View style={styles.floatingLabel}><Text style={styles.floatingLabelText}>YOUR PERSONAL STYLE SPACE</Text></View>
         <View style={styles.artCaption}>
