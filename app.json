@@ -2,7 +2,7 @@
   "expo": {
     "name": "StyleMate",
     "slug": "stylemate",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "scheme": "stylemate",
@@ -12,7 +12,14 @@
         "expo-image-picker",
         {
           "photosPermission": "StyleMate needs access to your photos so you can add pictures of your clothes.",
+          "cameraPermission": "StyleMate uses your camera so you can take a picture of a clothing item.",
           "microphonePermission": false
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "enableRemoteNotifications": false
         }
       ]
     ],

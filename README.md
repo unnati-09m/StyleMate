@@ -1,23 +1,18 @@
 # StyleMate
 
-A personal smart wardrobe assistant for iOS and Android, built with JavaScript, React Native, and Expo Router.
+A personal smart wardrobe assistant for iOS and Android, built with JavaScript, React Native and Expo Router.
 
-## Current progress
+## What the app does
 
-- [x] Expo project configuration and Expo Router
-- [x] Four-tab navigation: Home, Wardrobe, Favourites, History
-- [x] Initial screen layouts and empty states
-- [x] Welcome screen
-- [x] Local profile creation and email-based profile access
-- [x] Manual clothing attributes and wardrobe item management\n- [ ] Clothing photo picker
-- [x] Local wardrobe persistence with AsyncStorage
-- [ ] Rule-based outfit suggestions
-- [ ] Favourite outfit persistence
-- [ ] Wear history persistence
-
-## Important note about profiles
-
-The current create-profile flow stores a name and email locally on the device using AsyncStorage. It is a lightweight local profile for this offline-first student project, not a secure online account or server-backed authentication system.
+- Create and reopen a simple local profile
+- Add clothing manually or select a photo from the camera/gallery
+- Preview clothing photos before saving; copy selected images into the app Documents directory
+- Filter your wardrobe by category
+- Build deterministic outfit combinations from your own clothes
+- Save favourite outfits and mark looks as worn
+- Keep an outfit journal across app restarts
+- Load a remote style-inspiration feed with loading, error and retry states
+- Schedule an optional daily local outfit reminder at 8 PM and open Outfit Studio when tapped
 
 ## Tech stack
 
@@ -25,44 +20,29 @@ The current create-profile flow stores a name and email locally on the device us
 - React Native
 - Expo SDK 58
 - Expo Router
-- AsyncStorage for the initial local profile
-- Expo SQLite planned for wardrobe, favourites, and wear history
-- Expo Image Picker planned for clothing photos
+- AsyncStorage with JSON serialization
+- Expo Image Picker
+- Expo FileSystem
+- Expo Notifications (local notifications only)
 
 ## Getting started
 
 Requires Node.js 22.13 or newer.
 
-```bash
-git clone https://github.com/unnati-09m/StyleMate.git
-cd StyleMate
-npm install
-npx expo start
-```
+Clone the repository, run npm install, then run npx expo start.
 
-Press `i` to open the iOS simulator, or scan the QR code using Expo Go on a compatible device.
+Because notifications and native camera/gallery behaviour use native modules, test on a physical device or a compatible development build. Local notifications are supported in Expo Go; remote push notifications are not configured in this project.
 
 ## Project structure
 
-```text
-app/
-  _layout.js
-  index.js
-  welcome.js
-  signup.js
-  login.js
-  (auth)/
-    _layout.js
-  (tabs)/
-    _layout.js
-    index.js
-    wardrobe.js
-    favourites.js
-    history.js
-constants/
-  theme.js
-```
+app contains the welcome, login, signup, outfit studio, look details and tab screens.
+constants contains sample clothing and theme values.
+utils contains wardrobe storage, style storage, outfit rules and reminders.
 
-## Development approach
+## How outfit suggestions work
 
-The app is built in small, understandable steps. Outfit recommendations will use deterministic JavaScript rules based only on clothes the user has added. No cloud backend or AI model is required.
+The outfit builder uses beginner-friendly JavaScript functions, arrays, objects, filter and find. It chooses a dress or a top-and-bottom pair that matches the selected occasion and season, and adds shoes/accessories when available. No AI model or cloud account is used for suggestions.
+
+## Data and privacy note
+
+Profile details, wardrobe entries, favourites and wear history are stored on the device using AsyncStorage. Selected photos are copied into the app's local Documents directory and their file references are stored with the clothing item. The inspiration feed uses DummyJSON as sample remote product data; it is not the user's wardrobe and is not saved as clothing.

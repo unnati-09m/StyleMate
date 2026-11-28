@@ -1,43 +1,134 @@
-import { ImageBackground, StyleSheet, Text, View } from "react-native";
-import { COLORS, RADIUS, SPACING } from "../../constants/theme";
+import { useCallback, useState } from "react";
+import { FlatList, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { useFocusEffect, useRouter } from "expo-router";
+import { COLORS, RADIUS } from "../../constants/theme";
+import { getWearHistory } from "../../utils/styleStorage";
 
-const HISTORY_IMAGE = require("../../assets/wardrobe-rack.jpg");
+function formatDate(value) {
+  if (!value) return "Recently worn";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Recently worn";
+  return date.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
+}
+
+function HistoryCard({ item, onOpen }) {
+  const firstItem = item.items?.[0];
+
+  return (
+    <Pressable style={styles.entry} onPress={() => onOpen(item)}>
+      {firstItem?.imageUri ? (
+        <Image source={{ uri: firstItem.imageUri }} style={styles.entryImage} />
+      ) : (
+        <View style={styles.entryImageFallback}><Text style={styles.fallbackMark}>✳</Text></View>
+      )}
+      <View style={styles.entryCopy}>
+        <Text style={styles.entryDate}>{formatDate(item.wornAt)}</Text>
+        <Text style={styles.entryTitle}>{item.title || item.occasion + " outfit"}</Text>
+        <Text style={styles.entryMeta}>{item.items?.length || 0} pieces  ·  {item.occasion}</Text>
+        <Text style={styles.openText}>View outfit  →</Text>
+      </View>
+    </Pressable>
+  );
+}
 
 export default function HistoryScreen() {
+  const router = useRouter();
+  const [history, setHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      let active = true;
+
+      async function loadHistory() {
+        try {
+          const savedHistory = await getWearHistory();
+          if (active) setHistory(savedHistory);
+        } catch (error) {
+          console.warn("Could not open outfit history:", error);
+        } finally {
+          if (active) setLoading(false);
+        }
+      }
+
+      loadHistory();
+      return () => { active = false; };
+    }, [])
+  );
+
+  function openLook(item) {
+    router.push({ pathname: "/look-details", params: { look: JSON.stringify(item) } });
+  }
+
   return (
     <View style={styles.screen}>
-      <Text style={styles.eyebrow}>YOUR OUTFIT JOURNAL</Text>
-      <Text style={styles.title}>The days you wore it.</Text>
-      <Text style={styles.description}>A little timeline of the outfits that made it out into the world.</Text>
-
-      <ImageBackground source={HISTORY_IMAGE} style={styles.imageCard} imageStyle={styles.image}>
-        <View style={styles.shade} />
-        <Text style={styles.imageKicker}>STYLE, DAY BY DAY</Text>
-        <Text style={styles.imageTitle}>Every day is{"\n"}another outfit story.</Text>
-      </ImageBackground>
-
-      <View style={styles.emptyCard}>
-        <View style={styles.iconCircle}><Text style={styles.calendar}>▦</Text></View>
-        <Text style={styles.emptyTitle}>Your story starts here</Text>
-        <Text style={styles.emptyText}>Outfits you mark as worn will appear here, so you can look back at your style over time.</Text>
-      </View>
+      <FlatList
+        data={history}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <HistoryCard item={item} onOpen={openLook} />}
+        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={
+          <View>
+            <Text style={styles.eyebrow}>YOUR OUTFIT JOURNAL</Text>
+            <Text style={styles.title}>Worn with love.</Text>
+            <Text style={styles.description}>A little timeline of the outfits you have worn.</Text>
+            <View style={styles.banner}>
+              <View style={styles.bannerCircle} />
+              <Text style={styles.bannerKicker}>STYLE, DAY BY DAY</Text>
+              <Text style={styles.bannerTitle}>Every day gets its own story.</Text>
+              <Text style={styles.bannerText}>Mark a look as worn to remember it here.</Text>
+            </View>
+            <View style={styles.sectionRow}>
+              <Text style={styles.sectionTitle}>Your outfit history</Text>
+              <Text style={styles.count}>{history.length} ENTRIES</Text>
+            </View>
+          </View>
+        }
+        ListEmptyComponent={
+          <View style={styles.emptyCard}>
+            <Text style={styles.calendar}>▦</Text>
+            <Text style={styles.emptyTitle}>{loading ? "Opening your journal…" : "Your story starts here."}</Text>
+            <Text style={styles.emptyText}>After you create a look, tap “Mark as worn”. Your outfit will be saved here.</Text>
+            {!loading ? (
+              <Pressable style={styles.emptyButton} onPress={() => router.push("/outfit-studio")}>
+                <Text style={styles.emptyButtonText}>Create an outfit  →</Text>
+              </Pressable>
+            ) : null}
+          </View>
+        }
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: COLORS.background, padding: SPACING.lg, paddingTop: 32 },
-  eyebrow: { color: "#A47E69", fontSize: 9, fontWeight: "900", letterSpacing: 1.5 },
-  title: { color: COLORS.text, fontSize: 30, fontWeight: "900", marginTop: 7, letterSpacing: -1 },
-  description: { color: COLORS.textMuted, fontSize: 13, lineHeight: 19, marginTop: 8 },
-  imageCard: { height: 190, justifyContent: "flex-end", padding: 18, marginTop: 24, overflow: "hidden", backgroundColor: "#D8CBC0" },
-  image: { borderRadius: 20 },
-  shade: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.3)" },
-  imageKicker: { color: "#FFFFFF", fontSize: 8, fontWeight: "900", letterSpacing: 1.4 },
-  imageTitle: { color: "#FFFFFF", fontSize: 26, lineHeight: 29, fontWeight: "900", letterSpacing: -0.7, marginTop: 7 },
-  emptyCard: { backgroundColor: "#F8F6F4", borderRadius: RADIUS.lg, padding: 22, alignItems: "center", marginTop: 17, borderWidth: 1, borderColor: "#EEEAE6" },
-  iconCircle: { width: 58, height: 58, borderRadius: 29, backgroundColor: "#EFE5DE", alignItems: "center", justifyContent: "center" },
-  calendar: { color: COLORS.text, fontSize: 29 },
-  emptyTitle: { color: COLORS.text, fontSize: 16, fontWeight: "900", marginTop: 13 },
-  emptyText: { color: COLORS.textMuted, fontSize: 12, lineHeight: 18, textAlign: "center", marginTop: 7 },
+  screen: { flex: 1, backgroundColor: COLORS.background },
+  listContent: { paddingHorizontal: 19, paddingTop: 26, paddingBottom: 34, flexGrow: 1 },
+  eyebrow: { color: "#9A7864", fontSize: 8, fontWeight: "900", letterSpacing: 1.5 },
+  title: { color: COLORS.text, fontSize: 30, fontWeight: "900", letterSpacing: -1, marginTop: 7 },
+  description: { color: COLORS.textMuted, fontSize: 11, lineHeight: 17, marginTop: 7 },
+  banner: { backgroundColor: "#E9E3DC", borderRadius: 20, padding: 19, marginTop: 21, overflow: "hidden" },
+  bannerCircle: { position: "absolute", width: 145, height: 145, borderRadius: 73, borderWidth: 1, borderColor: "#CFC2B7", right: -20, top: -35 },
+  bannerKicker: { color: "#786556", fontSize: 8, fontWeight: "900", letterSpacing: 1.4 },
+  bannerTitle: { color: COLORS.text, fontSize: 23, fontWeight: "900", marginTop: 10, maxWidth: 235, letterSpacing: -0.6 },
+  bannerText: { color: "#6F6259", fontSize: 9, lineHeight: 14, marginTop: 7 },
+  sectionRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 25, marginBottom: 12 },
+  sectionTitle: { color: COLORS.text, fontSize: 15, fontWeight: "900" },
+  count: { color: COLORS.textMuted, fontSize: 8, fontWeight: "900", letterSpacing: 0.8 },
+  entry: { flexDirection: "row", backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: COLORS.border, borderRadius: 16, padding: 9, marginBottom: 10, gap: 12 },
+  entryImage: { width: 91, height: 105, borderRadius: 11, backgroundColor: "#EEE9E3" },
+  entryImageFallback: { width: 91, height: 105, borderRadius: 11, backgroundColor: "#EEE9E3", alignItems: "center", justifyContent: "center" },
+  fallbackMark: { color: "#927B6A", fontSize: 34 },
+  entryCopy: { flex: 1, justifyContent: "center" },
+  entryDate: { color: "#9A7864", fontSize: 8, fontWeight: "900", letterSpacing: 0.6 },
+  entryTitle: { color: COLORS.text, fontSize: 13, fontWeight: "900", marginTop: 7 },
+  entryMeta: { color: COLORS.textMuted, fontSize: 9, marginTop: 4 },
+  openText: { color: COLORS.text, fontSize: 8, fontWeight: "900", marginTop: 11 },
+  emptyCard: { padding: 22, borderWidth: 1, borderColor: COLORS.border, borderRadius: 18, alignItems: "center", backgroundColor: "#F7F5F3", marginTop: 4 },
+  calendar: { color: COLORS.text, fontSize: 33 },
+  emptyTitle: { color: COLORS.text, fontSize: 14, fontWeight: "900", marginTop: 8 },
+  emptyText: { color: COLORS.textMuted, fontSize: 10, lineHeight: 16, textAlign: "center", marginTop: 6 },
+  emptyButton: { backgroundColor: COLORS.text, borderRadius: RADIUS.pill, paddingHorizontal: 15, paddingVertical: 10, marginTop: 14 },
+  emptyButtonText: { color: "#FFFFFF", fontSize: 9, fontWeight: "900" },
 });
