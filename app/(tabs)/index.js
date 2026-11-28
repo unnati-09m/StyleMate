@@ -11,6 +11,7 @@ import {
   View,
 } from "react-native";
 import { useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { COLORS, RADIUS } from "../../constants/theme";
 import { EDITORIAL_IMAGES } from "../../constants/editorialImages";
@@ -167,7 +168,8 @@ export default function HomeScreen() {
   }
 
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+    <SafeAreaView style={styles.safeArea} edges={["top"]}>
+      <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
       <View style={styles.topBar}>
         <View>
           <Text style={styles.brand}>STYLEMATE</Text>
@@ -186,39 +188,74 @@ export default function HomeScreen() {
       <View style={styles.intro}>
         <Text style={styles.eyebrow}>YOUR WARDROBE, REIMAGINED</Text>
         <Text style={styles.greeting}>Hello, {profileName}.</Text>
-        <Text style={styles.headline}>A little less{"\n"}what should I wear?</Text>
+        <Text style={styles.headline}>Less guesswork.{"\n"}More personal style.</Text>
         <Text style={styles.description}>
           More outfits from the pieces you already own. Thoughtful, simple and completely your style.
         </Text>
       </View>
 
-      <View style={styles.heroCard}>
-        <View style={styles.heroTopline}>
-          <Text style={styles.heroKicker}>THE STYLEMATE EDIT</Text>
-          <Text style={styles.heroIndex}>01 — 04</Text>
+      <View style={styles.editorialSection}>
+        <View style={styles.editorialSectionHeader}>
+          <Text style={styles.editorialSectionKicker}>THE STYLEMATE EDIT</Text>
+          <Text style={styles.editorialSectionIndex}>01 — 03</Text>
         </View>
-        <View style={styles.heroPhoto}>
-          <EditorialImage
-            source={EDITORIAL_IMAGES.home}
-            style={StyleSheet.absoluteFill}
-            fallbackLabel="Neutral fashion editorial"
-          />
-          <View style={styles.heroOverlay} />
-          <View style={styles.heroImageCopy}>
-            <Text style={styles.heroImageKicker}>MAKE EVERY PIECE COUNT</Text>
-            <Text style={styles.heroImageTitle}>Wear your{"\n"}wardrobe well.</Text>
-            <Text style={styles.heroImageText}>Find a new favourite in what you already own.</Text>
+
+        <View style={styles.photoMosaic}>
+          <View style={styles.mainPhotoTile}>
+            <EditorialImage
+              source={EDITORIAL_IMAGES.home}
+              style={StyleSheet.absoluteFill}
+              resizeMode="cover"
+              fallbackLabel="Neutral studio fashion editorial"
+            />
+            <View style={styles.mainPhotoShade} />
+            <View style={styles.mainPhotoCopy}>
+              <Text style={styles.photoEyebrow}>MAKE EVERY PIECE COUNT</Text>
+              <Text style={styles.photoHeadline}>Style starts{"\n"}with what you own.</Text>
+              <Text style={styles.photoCaption}>Find a fresh way to wear your favourites.</Text>
+            </View>
+            <View style={styles.photoIndex}><Text style={styles.photoIndexText}>01</Text></View>
+          </View>
+
+          <View style={styles.sidePhotoColumn}>
+            <View style={styles.sidePhotoTile}>
+              <EditorialImage
+                source={EDITORIAL_IMAGES.homeDetailOne}
+                style={StyleSheet.absoluteFill}
+                resizeMode="cover"
+                fallbackLabel="Soft neutral fashion editorial"
+              />
+              <View style={styles.sidePhotoShade} />
+              <View style={styles.sidePhotoTag}>
+                <Text style={styles.sidePhotoTagText}>THE EVERYDAY EDIT</Text>
+              </View>
+            </View>
+
+            <View style={styles.sidePhotoTile}>
+              <EditorialImage
+                source={EDITORIAL_IMAGES.homeDetailTwo}
+                style={StyleSheet.absoluteFill}
+                resizeMode="cover"
+                fallbackLabel="Warm studio fashion editorial"
+              />
+              <View style={styles.sidePhotoShade} />
+              <View style={styles.sidePhotoTag}>
+                <Text style={styles.sidePhotoTagText}>A LITTLE INSPIRATION</Text>
+              </View>
+            </View>
           </View>
         </View>
-        <View style={styles.heroFooter}>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.heroFooterTitle}>Your next look starts here.</Text>
-            <Text style={styles.heroFooterText}>Choose an occasion and let your own clothes do the rest.</Text>
+
+        <View style={styles.editorialCaption}>
+          <View style={styles.editorialCaptionCopy}>
+            <Text style={styles.editorialCaptionTitle}>Your next look starts here.</Text>
+            <Text style={styles.editorialCaptionText}>Choose an occasion. We'll bring your own pieces together.</Text>
           </View>
-          <Pressable style={styles.roundButton} onPress={() => router.push("/outfit-studio")}>
-            <Text style={styles.roundButtonText}>↗</Text>
+          <Pressable style={styles.editorialRoundButton} onPress={() => router.push("/outfit-studio")}>
+            <Text style={styles.editorialRoundButtonText}>↗</Text>
           </Pressable>
         </View>
+
         <Pressable style={styles.primaryButton} onPress={() => router.push("/outfit-studio")}>
           <Text style={styles.primaryButtonText}>Open Outfit Studio</Text>
           <Text style={styles.primaryButtonArrow}>→</Text>
@@ -313,13 +350,15 @@ export default function HomeScreen() {
       </View>
 
       <Text style={styles.footerNote}>STYLEMATE  /  MAKE MORE OF WHAT YOU HAVE.</Text>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: { flex: 1, backgroundColor: "#FFFFFF" },
   screen: { flex: 1, backgroundColor: "#FFFFFF" },
-  content: { paddingHorizontal: 18, paddingTop: 18, paddingBottom: 38 },
+  content: { paddingHorizontal: 18, paddingTop: 15, paddingBottom: 38 },
   topBar: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
   brand: { color: "#141414", fontSize: 20, fontWeight: "900", letterSpacing: 2.2 },
   brandSub: { color: "#8B8179", fontSize: 7, fontWeight: "800", letterSpacing: 1.5, marginTop: 4 },
@@ -333,24 +372,33 @@ const styles = StyleSheet.create({
   greeting: { color: "#171717", fontSize: 14, fontWeight: "700", marginTop: 10 },
   headline: { color: "#171717", fontSize: 40, lineHeight: 43, fontWeight: "900", letterSpacing: -1.7, marginTop: 7 },
   description: { color: "#6F6B67", fontSize: 12, lineHeight: 18, marginTop: 10, maxWidth: 315 },
-  heroCard: { borderRadius: 22, padding: 11, borderWidth: 1, borderColor: "#E8E4E0", backgroundColor: "#FFFFFF", marginBottom: 29 },
-  heroTopline: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 3, paddingBottom: 10 },
-  heroKicker: { color: "#6F6862", fontSize: 8, fontWeight: "900", letterSpacing: 1.2 },
-  heroIndex: { color: "#9A7864", fontSize: 8, fontWeight: "900", letterSpacing: 1 },
-  heroPhoto: { width: "100%", aspectRatio: 2 / 3, borderRadius: 15, overflow: "hidden", backgroundColor: "#EAE5DF" },
-  heroOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.14)" },
-  heroImageCopy: { position: "absolute", left: 18, right: 16, bottom: 20 },
-  heroImageKicker: { color: "#FFFFFF", fontSize: 8, fontWeight: "900", letterSpacing: 1.6 },
-  heroImageTitle: { color: "#FFFFFF", fontSize: 35, lineHeight: 37, fontWeight: "900", letterSpacing: -1.4, marginTop: 8 },
-  heroImageText: { color: "#FFFFFF", fontSize: 10, lineHeight: 15, marginTop: 8, maxWidth: 220 },
-  heroFooter: { flexDirection: "row", alignItems: "center", paddingHorizontal: 3, paddingTop: 14 },
-  heroFooterTitle: { color: "#171717", fontSize: 12, fontWeight: "900" },
-  heroFooterText: { color: "#77716B", fontSize: 9, lineHeight: 14, marginTop: 4, paddingRight: 8 },
-  roundButton: { width: 36, height: 36, borderRadius: 18, backgroundColor: "#F0ECE8", alignItems: "center", justifyContent: "center" },
-  roundButtonText: { color: "#171717", fontSize: 18, fontWeight: "700" },
-  primaryButton: { minHeight: 49, backgroundColor: "#171717", borderRadius: RADIUS.pill, paddingHorizontal: 17, flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 13 },
-  primaryButtonText: { color: "#FFFFFF", fontSize: 11, fontWeight: "900" },
-  primaryButtonArrow: { color: "#FFFFFF", fontSize: 19 },
+  editorialSection: { borderRadius: 21, borderWidth: 1, borderColor: "#E9E4DF", padding: 10, backgroundColor: "#FFFFFF", marginBottom: 27 },
+  editorialSectionHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 3, paddingBottom: 10 },
+  editorialSectionKicker: { color: "#6F6862", fontSize: 7, fontWeight: "900", letterSpacing: 1.3 },
+  editorialSectionIndex: { color: "#9A7864", fontSize: 7, fontWeight: "900", letterSpacing: 1 },
+  photoMosaic: { flexDirection: "row", height: 272, gap: 8 },
+  mainPhotoTile: { flex: 1.18, borderRadius: 14, overflow: "hidden", backgroundColor: "#EAE5DF", position: "relative" },
+  mainPhotoShade: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.23)" },
+  mainPhotoCopy: { position: "absolute", left: 13, right: 10, bottom: 16 },
+  photoEyebrow: { color: "#FFFFFF", fontSize: 7, fontWeight: "900", letterSpacing: 1.1 },
+  photoHeadline: { color: "#FFFFFF", fontSize: 25, lineHeight: 27, fontWeight: "900", letterSpacing: -0.9, marginTop: 7 },
+  photoCaption: { color: "#FFFFFF", fontSize: 8, lineHeight: 12, marginTop: 6, maxWidth: 145 },
+  photoIndex: { position: "absolute", top: 10, left: 10, backgroundColor: "rgba(255,255,255,0.92)", borderRadius: 12, paddingHorizontal: 8, paddingVertical: 5 },
+  photoIndexText: { color: "#171717", fontSize: 7, fontWeight: "900" },
+  sidePhotoColumn: { flex: 0.88, gap: 8 },
+  sidePhotoTile: { flex: 1, borderRadius: 14, overflow: "hidden", backgroundColor: "#EAE5DF", position: "relative" },
+  sidePhotoShade: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.12)" },
+  sidePhotoTag: { position: "absolute", bottom: 8, left: 8, right: 8, borderRadius: 12, backgroundColor: "rgba(255,255,255,0.93)", paddingHorizontal: 7, paddingVertical: 6, alignItems: "center" },
+  sidePhotoTagText: { color: "#171717", fontSize: 6, fontWeight: "900", letterSpacing: 0.5 },
+  editorialCaption: { flexDirection: "row", alignItems: "center", paddingHorizontal: 3, paddingTop: 13 },
+  editorialCaptionCopy: { flex: 1, paddingRight: 8 },
+  editorialCaptionTitle: { color: "#171717", fontSize: 11, fontWeight: "900" },
+  editorialCaptionText: { color: "#77716B", fontSize: 8, lineHeight: 13, marginTop: 4 },
+  editorialRoundButton: { width: 34, height: 34, borderRadius: 17, backgroundColor: "#F0ECE8", alignItems: "center", justifyContent: "center" },
+  editorialRoundButtonText: { color: "#171717", fontSize: 17, fontWeight: "700" },
+  primaryButton: { minHeight: 47, backgroundColor: "#171717", borderRadius: RADIUS.pill, paddingHorizontal: 17, flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 11 },
+  primaryButtonText: { color: "#FFFFFF", fontSize: 10, fontWeight: "900" },
+  primaryButtonArrow: { color: "#FFFFFF", fontSize: 18 },
   sectionHeading: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 12 },
   sectionTitleWrap: { flex: 1 },
   sectionEyebrow: { color: "#9A7864", fontSize: 7, fontWeight: "900", letterSpacing: 1.4, marginBottom: 5 },
