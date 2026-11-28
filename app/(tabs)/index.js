@@ -115,6 +115,28 @@ export default function HomeScreen() {
     return () => subscription.remove();
   }, [loadSummary, loadInspiration]);
 
+  function confirmLogout() {
+    Alert.alert(
+      "Log out of StyleMate?",
+      "Your wardrobe, saved looks and outfit history will stay on this device.",
+      [
+        { text: "Stay here", style: "cancel" },
+        {
+          text: "Log out",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await AsyncStorage.removeItem("stylemate-profile");
+              router.replace("/welcome");
+            } catch (error) {
+              Alert.alert("Couldn't log out", "Please try again.");
+            }
+          },
+        },
+      ]
+    );
+  }
+
   async function toggleReminder() {
     try {
       setReminderBusy(true);
@@ -151,8 +173,13 @@ export default function HomeScreen() {
           <Text style={styles.brand}>STYLEMATE</Text>
           <Text style={styles.brandSub}>THE EVERYDAY STYLE EDIT</Text>
         </View>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>{profileName.charAt(0).toUpperCase()}</Text>
+        <View style={styles.headerActions}>
+          <View style={styles.avatar}>
+            <Text style={styles.avatarText}>{profileName.charAt(0).toUpperCase()}</Text>
+          </View>
+          <Pressable style={styles.logoutButton} onPress={confirmLogout} accessibilityRole="button">
+            <Text style={styles.logoutText}>LOG OUT</Text>
+          </Pressable>
         </View>
       </View>
 
@@ -296,8 +323,11 @@ const styles = StyleSheet.create({
   topBar: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
   brand: { color: "#141414", fontSize: 20, fontWeight: "900", letterSpacing: 2.2 },
   brandSub: { color: "#8B8179", fontSize: 7, fontWeight: "800", letterSpacing: 1.5, marginTop: 4 },
-  avatar: { height: 40, width: 40, borderRadius: 20, backgroundColor: "#EDE8E2", alignItems: "center", justifyContent: "center" },
+  headerActions: { flexDirection: "row", alignItems: "center", gap: 9 },
+  avatar: { height: 38, width: 38, borderRadius: 19, backgroundColor: "#EDE8E2", alignItems: "center", justifyContent: "center" },
   avatarText: { color: "#171717", fontSize: 14, fontWeight: "900" },
+  logoutButton: { borderWidth: 1, borderColor: "#D8D1CB", borderRadius: 18, paddingHorizontal: 10, paddingVertical: 8 },
+  logoutText: { color: "#6F6862", fontSize: 7, fontWeight: "900", letterSpacing: 0.8 },
   intro: { marginTop: 31, marginBottom: 20 },
   eyebrow: { color: "#9A7864", fontSize: 8, fontWeight: "900", letterSpacing: 1.6 },
   greeting: { color: "#171717", fontSize: 14, fontWeight: "700", marginTop: 10 },
