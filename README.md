@@ -29,7 +29,7 @@ A personal smart wardrobe assistant for iOS and Android, built with JavaScript, 
 
 Requires Node.js 22.13 or newer.
 
-Clone the repository, run npm install, then run npx expo start.
+Clone the repository, run npm install, verify SDK-compatible dependency versions with npx expo install --check, run npx expo-doctor, then start with npx expo start.
 
 Because notifications and native camera/gallery behaviour use native modules, test on a physical device or a compatible development build. Local notifications are supported in Expo Go; remote push notifications are not configured in this project.
 
