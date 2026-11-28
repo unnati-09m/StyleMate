@@ -20,6 +20,8 @@ import { useFocusEffect } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import { File, Paths } from "expo-file-system";
 import { COLORS, RADIUS, SPACING } from "../../constants/theme";
+import { EDITORIAL_IMAGES } from "../../constants/editorialImages";
+import EditorialImage from "../../components/EditorialImage";
 import { SAMPLE_CLOTHING } from "../../constants/sampleClothing";
 import { getWardrobeItems, saveWardrobeItems } from "../../utils/wardrobeStorage";
 
@@ -296,10 +298,18 @@ export default function WardrobeScreen() {
           </View>
         </View>
 
-        <View style={styles.collectionBanner}>
-          <Text style={styles.bannerKicker}>YOUR CLOSET, YOUR RULES</Text>
-          <Text style={styles.bannerTitle}>Wear more of what you have.</Text>
-          <Text style={styles.bannerText}>Add a piece, choose its details and let StyleMate help you put it together.</Text>
+        <View style={styles.collectionPhoto}>
+          <EditorialImage
+            source={EDITORIAL_IMAGES.wardrobe}
+            style={StyleSheet.absoluteFill}
+            fallbackLabel="Monochrome studio fashion editorial"
+          />
+          <View style={styles.collectionPhotoOverlay} />
+          <View style={styles.collectionPhotoCopy}>
+            <Text style={styles.bannerKicker}>YOUR CLOSET, YOUR RULES</Text>
+            <Text style={styles.bannerTitle}>Wear more of what you have.</Text>
+            <Text style={styles.bannerText}>Add a piece, choose its details and build outfits around it.</Text>
+          </View>
         </View>
 
         <View style={styles.toolbar}>
@@ -489,10 +499,12 @@ const styles = StyleSheet.create({
   countBadge: { width: 61, height: 61, borderRadius: 18, backgroundColor: "#F0EDE9", alignItems: "center", justifyContent: "center", marginLeft: 10 },
   countNumber: { color: COLORS.text, fontSize: 21, fontWeight: "900" },
   countLabel: { color: COLORS.textMuted, fontSize: 7, fontWeight: "900", letterSpacing: 1 },
-  collectionBanner: { backgroundColor: "#1A1A1A", borderRadius: 20, padding: 18, marginTop: 21 },
-  bannerKicker: { color: "#D3C5B9", fontSize: 8, fontWeight: "900", letterSpacing: 1.4 },
+  collectionPhoto: { width: "100%", aspectRatio: 2 / 3, borderRadius: 17, overflow: "hidden", backgroundColor: "#EAE5DF", marginTop: 21, justifyContent: "flex-end" },
+  collectionPhotoOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.18)" },
+  collectionPhotoCopy: { padding: 17 },
+  bannerKicker: { color: "#FFFFFF", fontSize: 8, fontWeight: "900", letterSpacing: 1.4 },
   bannerTitle: { color: "#FFFFFF", fontSize: 22, fontWeight: "900", marginTop: 10, letterSpacing: -0.6 },
-  bannerText: { color: "#C7C1BB", fontSize: 10, lineHeight: 16, marginTop: 6, maxWidth: 270 },
+  bannerText: { color: "#FFFFFF", fontSize: 10, lineHeight: 16, marginTop: 6, maxWidth: 270 },
   toolbar: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 25, marginBottom: 13 },
   sectionTitle: { color: COLORS.text, fontSize: 16, fontWeight: "900" },
   smallMeta: { color: COLORS.textMuted, fontSize: 8, marginTop: 4 },

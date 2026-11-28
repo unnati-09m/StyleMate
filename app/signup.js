@@ -1,8 +1,20 @@
 import { useState } from "react";
-import { Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { Link, useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { COLORS, RADIUS, SPACING } from "../constants/theme";
+import { COLORS, RADIUS } from "../constants/theme";
+import { EDITORIAL_IMAGES } from "../constants/editorialImages";
+import EditorialImage from "../components/EditorialImage";
 
 export default function SignupScreen() {
   const router = useRouter();
@@ -13,6 +25,7 @@ export default function SignupScreen() {
   async function createProfile() {
     const cleanName = name.trim();
     const cleanEmail = email.trim().toLowerCase();
+
     if (!cleanName || !cleanEmail) {
       Alert.alert("A little more information", "Please enter your name and email address.");
       return;
@@ -21,6 +34,7 @@ export default function SignupScreen() {
       Alert.alert("Check your email", "Please enter a valid email address.");
       return;
     }
+
     try {
       setBusy(true);
       await AsyncStorage.setItem("stylemate-profile", JSON.stringify({ name: cleanName, email: cleanEmail }));
@@ -36,23 +50,43 @@ export default function SignupScreen() {
   return (
     <KeyboardAvoidingView style={styles.keyboard} behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <ScrollView contentContainerStyle={styles.screen} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
-        <Link href="/welcome" style={styles.back}>←  BACK</Link>
-        <View style={styles.artCard}>
-          <View style={styles.artCircle} />
-          <Text style={styles.artKicker}>STYLEMATE  /  YOUR STYLE SPACE</Text>
-          <Text style={styles.artTitle}>Make room{"\n"}for your style.</Text>
-          <Text style={styles.artCode}>S / M   —   001</Text>
+        <Link href="/welcome" style={styles.back}>←  BACK TO STYLEMATE</Link>
+
+        <View style={styles.hero}>
+          <EditorialImage source={EDITORIAL_IMAGES.signup} style={styles.heroPhoto} fallbackLabel="Monochrome editorial fashion photograph" />
+          <View style={styles.heroTag}><Text style={styles.heroTagText}>YOUR STYLE SPACE  /  01</Text></View>
         </View>
+
         <View style={styles.heading}>
           <Text style={styles.eyebrow}>LET'S MAKE THIS YOUR SPACE</Text>
-          <Text style={styles.title}>Create your{"\n"}StyleMate profile.</Text>
-          <Text style={styles.description}>A few details so your wardrobe feels personal.</Text>
+          <Text style={styles.title}>A wardrobe that{"\n"}feels like you.</Text>
+          <Text style={styles.description}>Create a local profile and start collecting the pieces you love.</Text>
         </View>
+
         <View style={styles.formCard}>
           <Text style={styles.label}>YOUR NAME</Text>
-          <TextInput value={name} onChangeText={setName} placeholder="How should we call you?" placeholderTextColor="#9A918B" autoCapitalize="words" style={styles.input} returnKeyType="next" />
+          <TextInput
+            value={name}
+            onChangeText={setName}
+            placeholder="How should we call you?"
+            placeholderTextColor="#A29A92"
+            autoCapitalize="words"
+            style={styles.input}
+            returnKeyType="next"
+          />
           <Text style={[styles.label, styles.emailLabel]}>EMAIL ADDRESS</Text>
-          <TextInput value={email} onChangeText={setEmail} placeholder="you@example.com" placeholderTextColor="#9A918B" keyboardType="email-address" autoCapitalize="none" autoCorrect={false} style={styles.input} returnKeyType="done" onSubmitEditing={createProfile} />
+          <TextInput
+            value={email}
+            onChangeText={setEmail}
+            placeholder="you@example.com"
+            placeholderTextColor="#A29A92"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoCorrect={false}
+            style={styles.input}
+            returnKeyType="done"
+            onSubmitEditing={createProfile}
+          />
           <Pressable style={[styles.primaryButton, busy && styles.disabled]} onPress={createProfile} disabled={busy}>
             <Text style={styles.primaryText}>{busy ? "Creating your profile…" : "Create my profile"}</Text>
             <Text style={styles.arrow}>→</Text>
@@ -62,35 +96,40 @@ export default function SignupScreen() {
             <Link href="/login" style={styles.link}> Log in</Link>
           </View>
         </View>
-        <Text style={styles.note}>This creates a simple local profile on this device. No online account is created.</Text>
+
+        <View style={styles.privacyCard}>
+          <Text style={styles.privacyTitle}>Made for your everyday.</Text>
+          <Text style={styles.privacyText}>Your clothing, photos, favourites and outfit history are stored locally on your device. No online account is created.</Text>
+        </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  keyboard: { flex: 1, backgroundColor: COLORS.background },
-  screen: { flexGrow: 1, paddingHorizontal: SPACING.lg, paddingTop: 22, paddingBottom: 28 },
-  back: { color: COLORS.textMuted, fontSize: 8, fontWeight: "900", letterSpacing: 1.1, marginBottom: 17 },
-  artCard: { minHeight: 190, backgroundColor: "#E9E2DC", borderRadius: 21, padding: 19, justifyContent: "flex-end", overflow: "hidden" },
-  artCircle: { position: "absolute", width: 160, height: 160, borderRadius: 80, backgroundColor: "#D8CABE", right: -24, top: -35 },
-  artKicker: { color: "#756457", fontSize: 8, fontWeight: "900", letterSpacing: 1.4 },
-  artTitle: { color: COLORS.text, fontSize: 31, lineHeight: 33, fontWeight: "900", letterSpacing: -0.9, marginTop: 12 },
-  artCode: { color: "#756457", fontSize: 8, fontWeight: "900", letterSpacing: 1.2, marginTop: 10 },
-  heading: { marginTop: 27 },
-  eyebrow: { color: "#9A7864", fontSize: 8, fontWeight: "900", letterSpacing: 1.4 },
-  title: { color: COLORS.text, fontSize: 31, lineHeight: 35, fontWeight: "900", letterSpacing: -1, marginTop: 8 },
-  description: { color: COLORS.textMuted, fontSize: 11, lineHeight: 17, marginTop: 8 },
-  formCard: { backgroundColor: "#F7F5F3", borderRadius: 20, padding: 16, marginTop: 22, borderWidth: 1, borderColor: "#EEEAE6" },
-  label: { color: COLORS.textMuted, fontSize: 8, fontWeight: "900", letterSpacing: 1.2, marginBottom: 9 },
-  emailLabel: { marginTop: 15 },
-  input: { height: 51, backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: COLORS.border, borderRadius: 12, paddingHorizontal: 14, color: COLORS.text, fontSize: 12 },
-  primaryButton: { minHeight: 52, backgroundColor: COLORS.text, borderRadius: RADIUS.pill, paddingHorizontal: 17, flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 18 },
-  primaryText: { color: "#FFFFFF", fontSize: 11, fontWeight: "900" },
-  arrow: { color: "#FFFFFF", fontSize: 20 },
-  bottom: { flexDirection: "row", justifyContent: "center", marginTop: 19 },
-  bottomText: { color: COLORS.textMuted, fontSize: 10 },
-  link: { color: COLORS.text, fontSize: 10, fontWeight: "900" },
-  note: { color: COLORS.textMuted, fontSize: 8, lineHeight: 13, textAlign: "center", marginTop: 16, paddingHorizontal: 12 },
+  keyboard: { flex: 1, backgroundColor: "#FFFFFF" },
+  screen: { flexGrow: 1, paddingHorizontal: 19, paddingTop: 21, paddingBottom: 30 },
+  back: { color: "#77716B", fontSize: 7, fontWeight: "900", letterSpacing: 1.1, marginBottom: 15 },
+  hero: { width: "100%", aspectRatio: 2 / 3, borderRadius: 17, overflow: "hidden", backgroundColor: "#EAE5DF", position: "relative" },
+  heroPhoto: { ...StyleSheet.absoluteFillObject },
+  heroTag: { position: "absolute", top: 12, left: 12, borderRadius: 18, backgroundColor: "rgba(255,255,255,0.94)", paddingHorizontal: 10, paddingVertical: 7 },
+  heroTagText: { color: "#171717", fontSize: 7, fontWeight: "900", letterSpacing: 0.8 },
+  heading: { marginTop: 22 },
+  eyebrow: { color: "#98775F", fontSize: 7, fontWeight: "900", letterSpacing: 1.4 },
+  title: { color: "#171717", fontSize: 32, lineHeight: 35, fontWeight: "900", letterSpacing: -1.2, marginTop: 7 },
+  description: { color: "#706A64", fontSize: 10, lineHeight: 16, marginTop: 8 },
+  formCard: { backgroundColor: "#F5F2EF", borderRadius: 17, padding: 15, marginTop: 19 },
+  label: { color: "#77716B", fontSize: 7, fontWeight: "900", letterSpacing: 1.2, marginBottom: 8 },
+  emailLabel: { marginTop: 14 },
+  input: { height: 49, backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#E3DDD7", borderRadius: 11, paddingHorizontal: 13, color: "#171717", fontSize: 11 },
+  primaryButton: { minHeight: 50, backgroundColor: "#171717", borderRadius: RADIUS.pill, paddingHorizontal: 16, flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 17 },
+  primaryText: { color: "#FFFFFF", fontSize: 10, fontWeight: "900" },
+  arrow: { color: "#FFFFFF", fontSize: 19 },
+  bottom: { flexDirection: "row", justifyContent: "center", marginTop: 17 },
+  bottomText: { color: "#77716B", fontSize: 9 },
+  link: { color: "#171717", fontSize: 9, fontWeight: "900" },
+  privacyCard: { backgroundColor: "#F5F2EF", padding: 14, borderRadius: 14, marginTop: 17 },
+  privacyTitle: { color: "#171717", fontSize: 10, fontWeight: "900" },
+  privacyText: { color: "#716A64", fontSize: 8, lineHeight: 13, marginTop: 5 },
   disabled: { opacity: 0.55 },
 });

@@ -46,3 +46,8 @@ The outfit builder uses beginner-friendly JavaScript functions, arrays, objects,
 ## Data and privacy note
 
 Profile details, wardrobe entries, favourites and wear history are stored on the device using AsyncStorage. Selected photos are copied into the app's local Documents directory and their file references are stored with the clothing item. The inspiration feed uses DummyJSON as sample remote product data; it is not the user's wardrobe and is not saved as clothing.
+
+
+## Editorial photography
+
+The welcome, Home, login, sign-up, wardrobe, favourites, history and Outfit Studio screens use separate portrait editorial images from Pexels. The shared EditorialImage component keeps a consistent portrait frame, displays the full image without forced cropping, and shows a neutral fallback when an image cannot be reached. Photos are loaded over the internet, so the device needs connectivity to display them.

@@ -10,6 +10,8 @@ import {
 } from "react-native";
 import { useFocusEffect, useRouter } from "expo-router";
 import { COLORS, RADIUS } from "../constants/theme";
+import { EDITORIAL_IMAGES } from "../constants/editorialImages";
+import EditorialImage from "../components/EditorialImage";
 import { getWardrobeItems } from "../utils/wardrobeStorage";
 import { buildOutfit } from "../utils/outfitRules";
 
@@ -117,7 +119,14 @@ export default function OutfitStudioScreen() {
           <Text style={styles.backText}>←  BACK</Text>
         </Pressable>
 
-        <Text style={styles.eyebrow}>THE OUTFIT ROOM</Text>
+        <View style={styles.editorialHero}>
+          <EditorialImage source={EDITORIAL_IMAGES.studio} style={StyleSheet.absoluteFill} fallbackLabel="Minimalist black suit fashion editorial" />
+          <View style={styles.editorialShade} />
+          <View style={styles.editorialCopy}>
+            <Text style={styles.editorialKicker}>THE OUTFIT ROOM</Text>
+            <Text style={styles.editorialTitle}>One wardrobe.{"\n"}A hundred ways to wear it.</Text>
+          </View>
+        </View>
         <Text style={styles.title}>Let's put a look together.</Text>
         <Text style={styles.description}>
           Pick the moment and the season. StyleMate will combine pieces you have already added.
@@ -213,6 +222,11 @@ export default function OutfitStudioScreen() {
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: COLORS.background },
   content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 24 },
+  editorialHero: { width: "100%", aspectRatio: 2 / 3, borderRadius: 17, overflow: "hidden", backgroundColor: "#EAE5DF", marginTop: 15, justifyContent: "flex-end" },
+  editorialShade: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.2)" },
+  editorialCopy: { padding: 18 },
+  editorialKicker: { color: "#FFFFFF", fontSize: 8, fontWeight: "900", letterSpacing: 1.4 },
+  editorialTitle: { color: "#FFFFFF", fontSize: 30, lineHeight: 33, fontWeight: "900", letterSpacing: -1, marginTop: 8 },
   backButton: { alignSelf: "flex-start", paddingVertical: 8, paddingRight: 15 },
   backText: { color: COLORS.textMuted, fontSize: 8, fontWeight: "900", letterSpacing: 1 },
   eyebrow: { color: "#9A7864", fontSize: 8, fontWeight: "900", letterSpacing: 1.5, marginTop: 18 },

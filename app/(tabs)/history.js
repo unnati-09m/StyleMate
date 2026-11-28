@@ -2,6 +2,8 @@ import { useCallback, useState } from "react";
 import { FlatList, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { useFocusEffect, useRouter } from "expo-router";
 import { COLORS, RADIUS } from "../../constants/theme";
+import { EDITORIAL_IMAGES } from "../../constants/editorialImages";
+import EditorialImage from "../../components/EditorialImage";
 import { getWearHistory } from "../../utils/styleStorage";
 
 function formatDate(value) {
@@ -74,10 +76,13 @@ export default function HistoryScreen() {
             <Text style={styles.title}>Worn with love.</Text>
             <Text style={styles.description}>A little timeline of the outfits you have worn.</Text>
             <View style={styles.banner}>
-              <View style={styles.bannerCircle} />
-              <Text style={styles.bannerKicker}>STYLE, DAY BY DAY</Text>
-              <Text style={styles.bannerTitle}>Every day gets its own story.</Text>
-              <Text style={styles.bannerText}>Mark a look as worn to remember it here.</Text>
+              <EditorialImage source={EDITORIAL_IMAGES.history} style={StyleSheet.absoluteFill} fallbackLabel="Monochrome fashion portrait" />
+              <View style={styles.bannerShade} />
+              <View style={styles.bannerCopy}>
+                <Text style={styles.bannerKicker}>STYLE, DAY BY DAY</Text>
+                <Text style={styles.bannerTitle}>Every day gets its own story.</Text>
+                <Text style={styles.bannerText}>Mark a look as worn to remember it here.</Text>
+              </View>
             </View>
             <View style={styles.sectionRow}>
               <Text style={styles.sectionTitle}>Your outfit history</Text>
@@ -108,11 +113,12 @@ const styles = StyleSheet.create({
   eyebrow: { color: "#9A7864", fontSize: 8, fontWeight: "900", letterSpacing: 1.5 },
   title: { color: COLORS.text, fontSize: 30, fontWeight: "900", letterSpacing: -1, marginTop: 7 },
   description: { color: COLORS.textMuted, fontSize: 11, lineHeight: 17, marginTop: 7 },
-  banner: { backgroundColor: "#E9E3DC", borderRadius: 20, padding: 19, marginTop: 21, overflow: "hidden" },
-  bannerCircle: { position: "absolute", width: 145, height: 145, borderRadius: 73, borderWidth: 1, borderColor: "#CFC2B7", right: -20, top: -35 },
-  bannerKicker: { color: "#786556", fontSize: 8, fontWeight: "900", letterSpacing: 1.4 },
-  bannerTitle: { color: COLORS.text, fontSize: 23, fontWeight: "900", marginTop: 10, maxWidth: 235, letterSpacing: -0.6 },
-  bannerText: { color: "#6F6259", fontSize: 9, lineHeight: 14, marginTop: 7 },
+  banner: { width: "100%", aspectRatio: 2 / 3, borderRadius: 17, marginTop: 21, overflow: "hidden", backgroundColor: "#EAE5DF", justifyContent: "flex-end" },
+  bannerShade: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.22)" },
+  bannerCopy: { padding: 18 },
+  bannerKicker: { color: "#FFFFFF", fontSize: 8, fontWeight: "900", letterSpacing: 1.4 },
+  bannerTitle: { color: "#FFFFFF", fontSize: 23, fontWeight: "900", marginTop: 10, maxWidth: 235, letterSpacing: -0.6 },
+  bannerText: { color: "#FFFFFF", fontSize: 9, lineHeight: 14, marginTop: 7 },
   sectionRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 25, marginBottom: 12 },
   sectionTitle: { color: COLORS.text, fontSize: 15, fontWeight: "900" },
   count: { color: COLORS.textMuted, fontSize: 8, fontWeight: "900", letterSpacing: 0.8 },

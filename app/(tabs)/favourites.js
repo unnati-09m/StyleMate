@@ -2,6 +2,8 @@ import { useCallback, useState } from "react";
 import { Alert, FlatList, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { useFocusEffect, useRouter } from "expo-router";
 import { COLORS, RADIUS } from "../../constants/theme";
+import { EDITORIAL_IMAGES } from "../../constants/editorialImages";
+import EditorialImage from "../../components/EditorialImage";
 import { getFavouriteLooks, removeFavouriteLook } from "../../utils/styleStorage";
 
 function LookCard({ item, onOpen, onRemove }) {
@@ -92,9 +94,13 @@ export default function FavouritesScreen() {
             <Text style={styles.title}>Your saved edit.</Text>
             <Text style={styles.description}>Keep the combinations you love, ready for another day.</Text>
             <View style={styles.banner}>
-              <Text style={styles.bannerKicker}>YOUR PERSONAL STYLE FILE</Text>
-              <Text style={styles.bannerTitle}>Good outfits are worth keeping.</Text>
-              <Text style={styles.bannerText}>Save a look from Outfit Studio and it will live here.</Text>
+              <EditorialImage source={EDITORIAL_IMAGES.favourites} style={StyleSheet.absoluteFill} fallbackLabel="Beige fashion lookbook" />
+              <View style={styles.bannerShade} />
+              <View style={styles.bannerCopy}>
+                <Text style={styles.bannerKicker}>YOUR PERSONAL STYLE FILE</Text>
+                <Text style={styles.bannerTitle}>Good outfits are worth keeping.</Text>
+                <Text style={styles.bannerText}>Save a look from Outfit Studio and it will live here.</Text>
+              </View>
             </View>
             <View style={styles.sectionRow}>
               <Text style={styles.sectionTitle}>Saved looks</Text>
@@ -125,10 +131,12 @@ const styles = StyleSheet.create({
   eyebrow: { color: "#9A7864", fontSize: 8, fontWeight: "900", letterSpacing: 1.5 },
   title: { color: COLORS.text, fontSize: 30, fontWeight: "900", letterSpacing: -1, marginTop: 7 },
   description: { color: COLORS.textMuted, fontSize: 11, lineHeight: 17, marginTop: 7 },
-  banner: { backgroundColor: "#1A1A1A", borderRadius: 20, padding: 18, marginTop: 21 },
-  bannerKicker: { color: "#D4C5B8", fontSize: 8, fontWeight: "900", letterSpacing: 1.4 },
+  banner: { width: "100%", aspectRatio: 2 / 3, borderRadius: 17, marginTop: 21, overflow: "hidden", backgroundColor: "#EAE5DF", justifyContent: "flex-end" },
+  bannerShade: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.22)" },
+  bannerCopy: { padding: 17 },
+  bannerKicker: { color: "#FFFFFF", fontSize: 8, fontWeight: "900", letterSpacing: 1.4 },
   bannerTitle: { color: "#FFFFFF", fontSize: 22, fontWeight: "900", marginTop: 9, letterSpacing: -0.5 },
-  bannerText: { color: "#C8C2BC", fontSize: 9, marginTop: 6, lineHeight: 14 },
+  bannerText: { color: "#FFFFFF", fontSize: 9, marginTop: 6, lineHeight: 14 },
   sectionRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 25, marginBottom: 13 },
   sectionTitle: { color: COLORS.text, fontSize: 15, fontWeight: "900" },
   count: { color: COLORS.textMuted, fontSize: 8, fontWeight: "900", letterSpacing: 0.8 },
