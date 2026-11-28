@@ -11,6 +11,7 @@ import {
   View,
 } from "react-native";
 import { Link, useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { COLORS, RADIUS } from "../constants/theme";
 import { EDITORIAL_IMAGES } from "../constants/editorialImages";
@@ -48,9 +49,10 @@ export default function SignupScreen() {
   }
 
   return (
-    <KeyboardAvoidingView style={styles.keyboard} behavior={Platform.OS === "ios" ? "padding" : undefined}>
+    <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
+      <KeyboardAvoidingView style={styles.keyboard} behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <ScrollView contentContainerStyle={styles.screen} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
-        <Link href="/welcome" style={styles.back}>←  BACK TO STYLEMATE</Link>
+        <Link href="/welcome" asChild><Pressable><Text style={styles.back}>←  BACK TO STYLEMATE</Text></Pressable></Link>
 
         <View style={styles.hero}>
           <EditorialImage source={EDITORIAL_IMAGES.signup} style={styles.heroPhoto} fallbackLabel="Monochrome editorial fashion photograph" />
@@ -93,7 +95,7 @@ export default function SignupScreen() {
           </Pressable>
           <View style={styles.bottom}>
             <Text style={styles.bottomText}>Already joined?</Text>
-            <Link href="/login" style={styles.link}> Log in</Link>
+            <Link href="/login" asChild><Pressable><Text style={styles.link}>Log in</Text></Pressable></Link>
           </View>
         </View>
 
@@ -102,11 +104,13 @@ export default function SignupScreen() {
           <Text style={styles.privacyText}>Your clothing, photos, favourites and outfit history are stored locally on your device. No online account is created.</Text>
         </View>
       </ScrollView>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: { flex: 1, backgroundColor: "#FFFFFF" },
   keyboard: { flex: 1, backgroundColor: "#FFFFFF" },
   screen: { flexGrow: 1, paddingHorizontal: 19, paddingTop: 21, paddingBottom: 30 },
   back: { color: "#77716B", fontSize: 7, fontWeight: "900", letterSpacing: 1.1, marginBottom: 15 },

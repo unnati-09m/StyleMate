@@ -11,6 +11,7 @@ import {
   View,
 } from "react-native";
 import { Link, useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { COLORS, RADIUS } from "../constants/theme";
 import { EDITORIAL_IMAGES } from "../constants/editorialImages";
@@ -48,9 +49,10 @@ export default function LoginScreen() {
   }
 
   return (
-    <KeyboardAvoidingView style={styles.keyboard} behavior={Platform.OS === "ios" ? "padding" : undefined}>
+    <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
+      <KeyboardAvoidingView style={styles.keyboard} behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <ScrollView contentContainerStyle={styles.screen} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
-        <Link href="/welcome" style={styles.back}>←  BACK TO STYLEMATE</Link>
+        <Link href="/welcome" asChild><Pressable><Text style={styles.back}>←  BACK TO STYLEMATE</Text></Pressable></Link>
 
         <View style={styles.hero}>
           <EditorialImage source={EDITORIAL_IMAGES.login} style={styles.heroPhoto} fallbackLabel="White tailored fashion editorial" />
@@ -83,7 +85,7 @@ export default function LoginScreen() {
           </Pressable>
           <View style={styles.bottom}>
             <Text style={styles.bottomText}>New to StyleMate?</Text>
-            <Link href="/signup" style={styles.link}> Create a profile</Link>
+            <Link href="/signup" asChild><Pressable><Text style={styles.link}>Create a profile</Text></Pressable></Link>
           </View>
         </View>
 
@@ -97,11 +99,13 @@ export default function LoginScreen() {
 
         <Text style={styles.note}>This is a local profile on this device, not an online account. Your saved wardrobe data stays on this device.</Text>
       </ScrollView>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: { flex: 1, backgroundColor: "#FFFFFF" },
   keyboard: { flex: 1, backgroundColor: "#FFFFFF" },
   screen: { flexGrow: 1, paddingHorizontal: 19, paddingTop: 21, paddingBottom: 30 },
   back: { color: "#77716B", fontSize: 7, fontWeight: "900", letterSpacing: 1.1, marginBottom: 15 },

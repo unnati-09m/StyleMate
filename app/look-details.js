@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, RADIUS } from "../constants/theme";
 import { addFavouriteLook, addWearHistory } from "../utils/styleStorage";
 
@@ -81,7 +82,8 @@ export default function LookDetailsScreen() {
 
   if (!look || !Array.isArray(look.items)) {
     return (
-      <View style={styles.screen}>
+      <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
+        <View style={styles.screen}>
         <Pressable onPress={() => router.back()} style={styles.backButton}>
           <Text style={styles.backText}>←  BACK</Text>
         </Pressable>
@@ -89,12 +91,14 @@ export default function LookDetailsScreen() {
           <Text style={styles.invalidTitle}>This outfit could not be opened.</Text>
           <Text style={styles.invalidText}>Go back and create or open another look.</Text>
         </View>
-      </View>
+        </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={styles.screen}>
+    <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
+      <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <Pressable onPress={() => router.back()} style={styles.backButton}>
           <Text style={styles.backText}>←  BACK</Text>
@@ -155,11 +159,13 @@ export default function LookDetailsScreen() {
           <Text style={styles.primaryButtonText}>Mark as worn  →</Text>
         </Pressable>
       </View>
-    </View>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: { flex: 1, backgroundColor: COLORS.background },
   screen: { flex: 1, backgroundColor: COLORS.background },
   content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 25 },
   backButton: { alignSelf: "flex-start", paddingVertical: 8, paddingRight: 15 },

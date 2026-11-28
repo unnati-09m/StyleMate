@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { FlatList, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { useFocusEffect, useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, RADIUS } from "../../constants/theme";
 import { EDITORIAL_IMAGES } from "../../constants/editorialImages";
 import EditorialImage from "../../components/EditorialImage";
@@ -63,7 +64,8 @@ export default function HistoryScreen() {
   }
 
   return (
-    <View style={styles.screen}>
+    <SafeAreaView style={styles.safeArea} edges={["top"]}>
+      <View style={styles.screen}>
       <FlatList
         data={history}
         keyExtractor={(item) => item.id}
@@ -103,11 +105,13 @@ export default function HistoryScreen() {
           </View>
         }
       />
-    </View>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: { flex: 1, backgroundColor: COLORS.background },
   screen: { flex: 1, backgroundColor: COLORS.background },
   listContent: { paddingHorizontal: 19, paddingTop: 26, paddingBottom: 34, flexGrow: 1 },
   eyebrow: { color: "#9A7864", fontSize: 8, fontWeight: "900", letterSpacing: 1.5 },

@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 import { useFocusEffect, useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, RADIUS } from "../constants/theme";
 import { EDITORIAL_IMAGES } from "../constants/editorialImages";
 import EditorialImage from "../components/EditorialImage";
@@ -113,7 +114,8 @@ export default function OutfitStudioScreen() {
   }
 
   return (
-    <View style={styles.screen}>
+    <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
+      <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <Pressable onPress={() => router.back()} style={styles.backButton}>
           <Text style={styles.backText}>←  BACK</Text>
@@ -215,11 +217,13 @@ export default function OutfitStudioScreen() {
           <Text style={styles.generateText}>{actionStatus === "generating" ? "Building…" : "Build my look  →"}</Text>
         </Pressable>
       </View>
-    </View>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: { flex: 1, backgroundColor: COLORS.background },
   screen: { flex: 1, backgroundColor: COLORS.background },
   content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 24 },
   editorialHero: { width: "100%", aspectRatio: 2 / 3, borderRadius: 17, overflow: "hidden", backgroundColor: "#EAE5DF", marginTop: 15, justifyContent: "flex-end" },

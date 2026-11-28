@@ -17,6 +17,7 @@ import {
   View,
 } from "react-native";
 import { useFocusEffect } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
 import { File, Paths } from "expo-file-system";
 import { COLORS, RADIUS, SPACING } from "../../constants/theme";
@@ -68,17 +69,6 @@ export default function WardrobeScreen() {
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("All");
-
-  const loadItems = useCallback(async () => {
-    try {
-      const savedItems = await getWardrobeItems();
-      setItems(savedItems);
-    } catch (error) {
-      Alert.alert("Couldn't load your wardrobe", "Close and reopen this screen to try again.");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
 
   useFocusEffect(
     useCallback(() => {
@@ -340,7 +330,8 @@ export default function WardrobeScreen() {
   }
 
   return (
-    <View style={styles.screen}>
+    <SafeAreaView style={styles.safeArea} edges={["top"]}>
+      <View style={styles.screen}>
       {loading ? (
         <View style={styles.loadingState}>
           <ActivityIndicator color={COLORS.text} />
@@ -482,11 +473,13 @@ export default function WardrobeScreen() {
           </ScrollView>
         </KeyboardAvoidingView>
       </Modal>
-    </View>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: { flex: 1, backgroundColor: COLORS.background },
   screen: { flex: 1, backgroundColor: COLORS.background },
   listContent: { paddingHorizontal: 19, paddingTop: 25, paddingBottom: 35, flexGrow: 1 },
   loadingState: { flex: 1, alignItems: "center", justifyContent: "center", gap: 9 },

@@ -5,7 +5,8 @@ const WARDROBE_KEY = "stylemate-wardrobe";
 export async function getWardrobeItems() {
   try {
     const savedItems = await AsyncStorage.getItem(WARDROBE_KEY);
-    return savedItems ? JSON.parse(savedItems) : [];
+    const parsedItems = savedItems ? JSON.parse(savedItems) : [];
+    return Array.isArray(parsedItems) ? parsedItems : [];
   } catch (error) {
     console.warn("Could not read wardrobe items:", error);
     return [];

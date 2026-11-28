@@ -9,6 +9,8 @@ function matchesFilters(item, occasion, season) {
 }
 
 export function buildOutfit(items, occasion, season) {
+  if (!Array.isArray(items) || items.length === 0) return null;
+
   const suitableItems = items.filter((item) =>
     matchesFilters(item, occasion, season)
   );

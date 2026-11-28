@@ -1,5 +1,6 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Link } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, RADIUS, SPACING } from "../constants/theme";
 import { EDITORIAL_IMAGES } from "../constants/editorialImages";
 import EditorialImage from "../components/EditorialImage";
@@ -18,7 +19,8 @@ function FeatureLine({ number, title, text }) {
 
 export default function WelcomeScreen() {
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+    <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
+      <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
       <View style={styles.nav}>
         <View>
           <Text style={styles.brand}>STYLEMATE</Text>
@@ -82,11 +84,13 @@ export default function WelcomeScreen() {
       </View>
 
       <Text style={styles.footer}>STYLEMATE  /  MAKE MORE OF WHAT YOU HAVE.</Text>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: { flex: 1, backgroundColor: "#FFFFFF" },
   screen: { flex: 1, backgroundColor: "#FFFFFF" },
   content: { paddingHorizontal: 19, paddingTop: 22, paddingBottom: 32 },
   nav: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 17 },
